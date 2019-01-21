@@ -1,0 +1,23 @@
+---
+- hosts: webserver
+  become: true
+  tasks:
+    - name: ensure a list of packages installed
+        yum:
+            name: "{{ packages }}"
+        vars:
+            packages:
+            - python
+            - pip
+            - mysql
+            - nginx
+		
+    - name: Enable and start Mysql
+      service: name=mysql state=started enabled=yes
+    
+    - name: Enable and start nginx
+      service: name=nginx state=started enabled=yes
+    
+    - name: index.html copy
+      template: src=index.html.j2 dest=/usr/share/nginx/html/index.html
+	  
